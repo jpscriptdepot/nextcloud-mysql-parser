@@ -1,0 +1,28 @@
+FROM ubuntu:20.04
+
+RUN apt-get update -y
+RUN apt-get upgrade -y
+RUN apt-get dist-upgrade -y
+
+ARG DEBIAN_FRONTEND=noninteractive
+
+RUN ln -s /usr/share/zoneinfo/America/Chicago /etc/localtime
+
+RUN apt-get install tzdata
+RUN dpkg-reconfigure -f noninteractive tzdata
+
+RUN useradd -m nextcloud
+
+RUN apt-get install -y apache2 mariadb-server php zip libapache2-mod-php php-gd php-json php-mysql php-curl php-mbstring php-intl php-imagick php-xml php-zip php-mysql php-bcmath php-gmp zip wget
+
+RUN apt-get install -y git
+
+RUN git clone https://github.com/jpscriptdepot/nextcloud-scripts.git
+
+RUN wget https://download.nextcloud.com/server/releases/nextcloud-23.0.0.zip
+
+RUN unzip nextcloud-23.0.0.zip
+
+RUN mv nextcloud /var/www/
+
+RUN chown -R www-data:www-data /var/www/nextcloud
